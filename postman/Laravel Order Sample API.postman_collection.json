@@ -1,0 +1,1086 @@
+{
+	"info": {
+		"_postman_id": "c96fb355-55d6-4854-9971-e734e074c655",
+		"name": "Laravel Order Sample API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26626180"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response is successful\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    pm.response.to.have.jsonBody({",
+									"        message: \"success\"",
+									"    });",
+									"});",
+									"",
+									"pm.test(\"Access token is present\", function () {",
+									"    pm.response.to.have.jsonBody(\"data.access_token\");",
+									"    pm.collectionVariables.set(\"access_token\", pm.response.json().data.access_token);",
+									"});",
+									"",
+									"pm.test(\"Token type is bearer\", function () {",
+									"    pm.response.to.have.jsonBody(\"data.token_type\", \"bearer\");",
+									"});",
+									"",
+									"pm.test(\"Expires in is present\", function () {",
+									"    pm.response.to.have.jsonBody(\"data.expires_in\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@admin.com\",\n    \"password\": \"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Login",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"admin@admin.com\",\n    \"password\": \"password\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 03 Jul 2023 03:03:57 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 03 Jul 2023 03:03:57 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.6"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "56"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"success\",\n    \"status\": 200,\n    \"data\": {\n        \"access_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE2ODgzNTM0MzcsImV4cCI6MTY4ODM1NzAzNywibmJmIjoxNjg4MzUzNDM3LCJqdGkiOiI1TEFEN1lhR1I0MXJjR1dTIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.OXt5ZASyp8PcorqPDDhHtNLxCmaO2BxOw7BCVfhvTVY\",\n        \"token_type\": \"bearer\",\n        \"expires_in\": 3600\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Me",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Get user info by current logged\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.to.have.jsonBody(\"data.id\").and.not.equal(null));",
+									"    pm.collectionVariables.set(\"user_id\", pm.response.json().data.id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/auth/me",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"me"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Me",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/auth/me",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"me"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 03 Jul 2023 03:04:09 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 03 Jul 2023 03:04:09 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.6"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "55"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"success\",\n    \"status\": 200,\n    \"data\": {\n        \"id\": 1,\n        \"name\": \"John Doe\",\n        \"first_name\": \"John\",\n        \"last_name\": \"Doe\",\n        \"phone_number\": \"0123456789\",\n        \"email\": \"admin@admin.com\",\n        \"email_verified_at\": null,\n        \"created_at\": \"2023-06-02T10:31:48.000000Z\",\n        \"updated_at\": \"2023-06-02T10:31:48.000000Z\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Refresh token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Get new access token by refresh token\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.to.have.jsonBody('data.access_token').and.not.equal(null));",
+									"    pm.collectionVariables.set(\"access_token\", pm.response.json().data.access_token);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/auth/refresh",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Refresh token",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/auth/refresh",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"refresh"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 03 Jul 2023 03:04:20 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 03 Jul 2023 03:04:20 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.6"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "54"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"success\",\n    \"status\": 200,\n    \"data\": {\n        \"access_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvcmVmcmVzaCIsImlhdCI6MTY4ODM1MzQzNywiZXhwIjoxNjg4MzU3MDYwLCJuYmYiOjE2ODgzNTM0NjAsImp0aSI6IjdTb3NDNmVGaFBvMHFabkciLCJzdWIiOiIxIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.pNeLHrI9s0S3-TiHH9VyrAyrAM-pVsIzKsLVwAOGfYY\",\n        \"token_type\": \"bearer\",\n        \"expires_in\": 3600\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Logout and clear access token\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    pm.response.to.be.json;",
+									"    pm.collectionVariables.set(\"access_token\",\"\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/auth/logout",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Logout",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/auth/logout",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"logout"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 03 Jul 2023 03:04:38 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 03 Jul 2023 03:04:38 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.6"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"success\",\n    \"status\": 200,\n    \"data\": {\n        \"message\": \"Successfully logged out\"\n    }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Get product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Get all products\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    pm.response.to.be.json;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/products",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get product",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/products",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 03 Jul 2023 03:04:52 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 03 Jul 2023 03:04:52 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.6"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "57"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"current_page\": 1,\n    \"data\": [\n        {\n            \"id\": 1,\n            \"name\": \"Rey Morissette\",\n            \"description\": \"Nostrum perspiciatis officia ab beatae atque voluptas vel. Ut consequatur expedita consequatur culpa. Enim dolor ut autem officia amet molestiae molestias cum.\",\n            \"price\": 759.38,\n            \"created_at\": \"2023-06-02T10:31:48.000000Z\",\n            \"updated_at\": \"2023-06-02T10:31:48.000000Z\"\n        },\n        {\n            \"id\": 2,\n            \"name\": \"Althea Koch\",\n            \"description\": \"Sequi est unde tenetur repellendus est iste. Nihil sequi amet sed nostrum minus. Est et ut distinctio.\",\n            \"price\": 527.32,\n            \"created_at\": \"2023-06-02T10:31:48.000000Z\",\n            \"updated_at\": \"2023-06-02T10:31:48.000000Z\"\n        },\n        {\n            \"id\": 3,\n            \"name\": \"Salvador O'Kon\",\n            \"description\": \"Assumenda mollitia itaque ad nostrum. Eum labore et tempore quia ullam. Quis voluptates non odio quidem quos. Accusamus est aut quis.\",\n            \"price\": 938.36,\n            \"created_at\": \"2023-06-02T10:31:48.000000Z\",\n            \"updated_at\": \"2023-06-02T10:31:48.000000Z\"\n        },\n        {\n            \"id\": 4,\n            \"name\": \"Dr. Gonzalo Mosciski\",\n            \"description\": \"Fugit ratione et libero ut sapiente. Facere delectus ut vel velit consequuntur. Molestiae aut at vitae ut quidem minus. Deleniti id doloremque vel fugit similique quibusdam.\",\n            \"price\": 637.39,\n            \"created_at\": \"2023-06-02T10:31:48.000000Z\",\n            \"updated_at\": \"2023-06-02T10:31:48.000000Z\"\n        },\n        {\n            \"id\": 5,\n            \"name\": \"Anastacio Hermiston\",\n            \"description\": \"Laborum recusandae enim id voluptatum. Accusamus est ex deserunt sapiente ipsa. Temporibus a perferendis commodi qui et.\",\n            \"price\": 147.79,\n            \"created_at\": \"2023-06-02T10:31:48.000000Z\",\n            \"updated_at\": \"2023-06-02T10:31:48.000000Z\"\n        },\n        {\n            \"id\": 6,\n            \"name\": \"Cicero Runte\",\n            \"description\": \"Quis necessitatibus et ut voluptatum nostrum doloremque. Et debitis non dolores quas magni ea.\",\n            \"price\": 241.51,\n            \"created_at\": \"2023-06-02T10:31:48.000000Z\",\n            \"updated_at\": \"2023-06-02T10:31:48.000000Z\"\n        },\n        {\n            \"id\": 7,\n            \"name\": \"Dr. Susie Crist\",\n            \"description\": \"Voluptas harum quibusdam tempore pariatur quam et nesciunt. Aut maxime beatae pariatur non quia voluptatem. Ad adipisci tenetur minima atque.\",\n            \"price\": 328.64,\n            \"created_at\": \"2023-06-02T10:31:48.000000Z\",\n            \"updated_at\": \"2023-06-02T10:31:48.000000Z\"\n        },\n        {\n            \"id\": 8,\n            \"name\": \"Miss Creola Renner DVM\",\n            \"description\": \"Id et itaque et est doloribus iure qui. Facere voluptatem et ut ut nihil modi. Expedita qui deserunt inventore autem ut. Optio voluptatum alias dolorum inventore quam quo.\",\n            \"price\": 413.03,\n            \"created_at\": \"2023-06-02T10:31:48.000000Z\",\n            \"updated_at\": \"2023-06-02T10:31:48.000000Z\"\n        },\n        {\n            \"id\": 9,\n            \"name\": \"Peter Mraz\",\n            \"description\": \"Voluptatem eos consequatur quo odit vel voluptas. Fuga laborum expedita ut distinctio nemo. Quaerat magni ea est consequuntur ut.\",\n            \"price\": 865.61,\n            \"created_at\": \"2023-06-02T10:31:48.000000Z\",\n            \"updated_at\": \"2023-06-02T10:31:48.000000Z\"\n        },\n        {\n            \"id\": 10,\n            \"name\": \"Royal Ratke\",\n            \"description\": \"Earum perspiciatis delectus labore ut. Animi similique iste molestiae. Non aut esse harum. Error temporibus sed dolor.\",\n            \"price\": 740.52,\n            \"created_at\": \"2023-06-02T10:31:48.000000Z\",\n            \"updated_at\": \"2023-06-02T10:31:48.000000Z\"\n        }\n    ],\n    \"first_page_url\": \"http://localhost:8000/api/products?page=1\",\n    \"from\": 1,\n    \"last_page\": 1,\n    \"last_page_url\": \"http://localhost:8000/api/products?page=1\",\n    \"links\": [\n        {\n            \"url\": null,\n            \"label\": \"&laquo; Previous\",\n            \"active\": false\n        },\n        {\n            \"url\": \"http://localhost:8000/api/products?page=1\",\n            \"label\": \"1\",\n            \"active\": true\n        },\n        {\n            \"url\": null,\n            \"label\": \"Next &raquo;\",\n            \"active\": false\n        }\n    ],\n    \"next_page_url\": null,\n    \"path\": \"http://localhost:8000/api/products\",\n    \"per_page\": 10,\n    \"prev_page_url\": null,\n    \"to\": 10,\n    \"total\": 10\n}"
+						}
+					]
+				},
+				{
+					"name": "Get product detail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Check if response status is 200",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Check if price is a number",
+									"pm.test(\"Price is a number\", function () {",
+									"    pm.expect(pm.response.json().data.price).to.be.a(\"number\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/products/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products",
+								"1"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get product detail",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/products/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"products",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 03 Jul 2023 03:05:00 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 03 Jul 2023 03:05:00 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.6"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "56"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"success\",\n    \"status\": 200,\n    \"data\": {\n        \"id\": 1,\n        \"name\": \"Rey Morissette\",\n        \"description\": \"Nostrum perspiciatis officia ab beatae atque voluptas vel. Ut consequatur expedita consequatur culpa. Enim dolor ut autem officia amet molestiae molestias cum.\",\n        \"price\": 759.38,\n        \"created_at\": \"2023-06-02T10:31:48.000000Z\",\n        \"updated_at\": \"2023-06-02T10:31:48.000000Z\"\n    }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Orders",
+			"item": [
+				{
+					"name": "Get orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/orders",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get orders",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/orders",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"orders"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 03 Jul 2023 03:05:08 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 03 Jul 2023 03:05:08 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.6"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "55"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"success\",\n    \"status\": 200,\n    \"data\": [\n        {\n            \"id\": 1,\n            \"order_date\": \"2021-10-01\",\n            \"total_amount\": 86.47,\n            \"status\": \"Approved\",\n            \"note\": null,\n            \"created_at\": \"2023-06-02T10:31:53.000000Z\",\n            \"updated_at\": \"2023-06-02T11:17:35.000000Z\",\n            \"customer\": {\n                \"id\": 1,\n                \"name\": \"John Doe\",\n                \"email\": \"admin@admin.com\"\n            },\n            \"billing\": {\n                \"id\": 1,\n                \"first_name\": \"Thorn\",\n                \"last_name\": \"Chorn\",\n                \"phone\": \"086977052\",\n                \"email\": null,\n                \"address\": \"Phnom Penh, Cambodia\",\n                \"created_at\": \"2023-06-02T10:31:53.000000Z\",\n                \"updated_at\": \"2023-06-02T10:31:53.000000Z\"\n            },\n            \"transactions\": [\n                {\n                    \"id\": 1,\n                    \"transaction_date\": \"2023-06-02\",\n                    \"transaction_amount\": 86.47,\n                    \"status\": \"Pending\",\n                    \"transaction_reference\": \"#1c7528f0\",\n                    \"created_at\": \"2023-06-02T10:31:53.000000Z\",\n                    \"updated_at\": \"2023-06-02T10:31:53.000000Z\",\n                    \"payment_method\": {\n                        \"id\": 1,\n                        \"name\": \"ABA Payway\"\n                    }\n                }\n            ],\n            \"order_items\": [\n                {\n                    \"product_id\": 1,\n                    \"product_name\": \"Rey Morissette\",\n                    \"price\": 10.99,\n                    \"quantity\": 2\n                },\n                {\n                    \"product_id\": 2,\n                    \"product_name\": \"Althea Koch\",\n                    \"price\": 19.99,\n                    \"quantity\": 1\n                },\n                {\n                    \"product_id\": 3,\n                    \"product_name\": \"Salvador O'Kon\",\n                    \"price\": 8.9,\n                    \"quantity\": 5\n                }\n            ],\n            \"order_trackings\": [\n                {\n                    \"id\": 1,\n                    \"status\": \"Pending\",\n                    \"created_at\": \"2023-06-02T10:31:53.000000Z\",\n                    \"updated_at\": \"2023-06-02T10:31:53.000000Z\"\n                },\n                {\n                    \"id\": 2,\n                    \"status\": \"Shipped\",\n                    \"created_at\": \"2023-06-02T10:37:41.000000Z\",\n                    \"updated_at\": \"2023-06-02T10:37:41.000000Z\"\n                },\n                {\n                    \"id\": 6,\n                    \"status\": \"Approved\",\n                    \"created_at\": \"2023-06-02T11:17:35.000000Z\",\n                    \"updated_at\": \"2023-06-02T11:17:35.000000Z\"\n                }\n            ]\n        },\n        {\n            \"id\": 2,\n            \"order_date\": \"2021-10-01\",\n            \"total_amount\": 108.45,\n            \"status\": \"Pending\",\n            \"note\": null,\n            \"created_at\": \"2023-06-02T10:41:05.000000Z\",\n            \"updated_at\": \"2023-06-02T10:41:05.000000Z\",\n            \"customer\": {\n                \"id\": 1,\n                \"name\": \"John Doe\",\n                \"email\": \"admin@admin.com\"\n            },\n            \"billing\": {\n                \"id\": 2,\n                \"first_name\": \"Thorn\",\n                \"last_name\": \"Chorn\",\n                \"phone\": \"086977052\",\n                \"email\": null,\n                \"address\": \"Phnom Penh, Cambodia\",\n                \"created_at\": \"2023-06-02T10:41:05.000000Z\",\n                \"updated_at\": \"2023-06-02T10:41:05.000000Z\"\n            },\n            \"transactions\": [\n                {\n                    \"id\": 2,\n                    \"transaction_date\": \"2023-06-02\",\n                    \"transaction_amount\": 108.45,\n                    \"status\": \"Pending\",\n                    \"transaction_reference\": \"#cb63ca53\",\n                    \"created_at\": \"2023-06-02T10:41:05.000000Z\",\n                    \"updated_at\": \"2023-06-02T10:41:05.000000Z\",\n                    \"payment_method\": {\n                        \"id\": 1,\n                        \"name\": \"ABA Payway\"\n                    }\n                }\n            ],\n            \"order_items\": [\n                {\n                    \"product_id\": 1,\n                    \"product_name\": \"Rey Morissette\",\n                    \"price\": 10.99,\n                    \"quantity\": 2\n                },\n                {\n                    \"product_id\": 2,\n                    \"product_name\": \"Althea Koch\",\n                    \"price\": 19.99,\n                    \"quantity\": 1\n                },\n                {\n                    \"product_id\": 3,\n                    \"product_name\": \"Salvador O'Kon\",\n                    \"price\": 8.9,\n                    \"quantity\": 5\n                },\n                {\n                    \"product_id\": 4,\n                    \"product_name\": \"Dr. Gonzalo Mosciski\",\n                    \"price\": 10.99,\n                    \"quantity\": 2\n                }\n            ],\n            \"order_trackings\": [\n                {\n                    \"id\": 3,\n                    \"status\": \"Pending\",\n                    \"created_at\": \"2023-06-02T10:41:05.000000Z\",\n                    \"updated_at\": \"2023-06-02T10:41:05.000000Z\"\n                }\n            ]\n        },\n        {\n            \"id\": 3,\n            \"order_date\": \"2021-10-01\",\n            \"total_amount\": 108.45,\n            \"status\": \"Pending\",\n            \"note\": null,\n            \"created_at\": \"2023-06-02T10:41:52.000000Z\",\n            \"updated_at\": \"2023-06-02T10:41:52.000000Z\",\n            \"customer\": {\n                \"id\": 1,\n                \"name\": \"John Doe\",\n                \"email\": \"admin@admin.com\"\n            },\n            \"billing\": {\n                \"id\": 3,\n                \"first_name\": \"Thorn\",\n                \"last_name\": \"Chorn\",\n                \"phone\": \"086977052\",\n                \"email\": null,\n                \"address\": \"1200, Phnom Penh, Cambodia\",\n                \"created_at\": \"2023-06-02T10:41:52.000000Z\",\n                \"updated_at\": \"2023-06-02T10:41:52.000000Z\"\n            },\n            \"transactions\": [\n                {\n                    \"id\": 3,\n                    \"transaction_date\": \"2023-06-02\",\n                    \"transaction_amount\": 108.45,\n                    \"status\": \"Pending\",\n                    \"transaction_reference\": \"#fb340465\",\n                    \"created_at\": \"2023-06-02T10:41:52.000000Z\",\n                    \"updated_at\": \"2023-06-02T10:41:52.000000Z\",\n                    \"payment_method\": {\n                        \"id\": 1,\n                        \"name\": \"ABA Payway\"\n                    }\n                }\n            ],\n            \"order_items\": [\n                {\n                    \"product_id\": 1,\n                    \"product_name\": \"Rey Morissette\",\n                    \"price\": 10.99,\n                    \"quantity\": 2\n                },\n                {\n                    \"product_id\": 2,\n                    \"product_name\": \"Althea Koch\",\n                    \"price\": 19.99,\n                    \"quantity\": 1\n                },\n                {\n                    \"product_id\": 3,\n                    \"product_name\": \"Salvador O'Kon\",\n                    \"price\": 8.9,\n                    \"quantity\": 5\n                },\n                {\n                    \"product_id\": 4,\n                    \"product_name\": \"Dr. Gonzalo Mosciski\",\n                    \"price\": 10.99,\n                    \"quantity\": 2\n                }\n            ],\n            \"order_trackings\": [\n                {\n                    \"id\": 4,\n                    \"status\": \"Pending\",\n                    \"created_at\": \"2023-06-02T10:41:52.000000Z\",\n                    \"updated_at\": \"2023-06-02T10:41:52.000000Z\"\n                }\n            ]\n        },\n        {\n            \"id\": 4,\n            \"order_date\": \"2021-10-01\",\n            \"total_amount\": 141.42,\n            \"status\": \"Refunded\",\n            \"note\": null,\n            \"created_at\": \"2023-06-02T10:44:46.000000Z\",\n            \"updated_at\": \"2023-06-02T11:20:48.000000Z\",\n            \"customer\": {\n                \"id\": 1,\n                \"name\": \"John Doe\",\n                \"email\": \"admin@admin.com\"\n            },\n            \"billing\": {\n                \"id\": 4,\n                \"first_name\": \"Thorn\",\n                \"last_name\": \"Chorn\",\n                \"phone\": \"086977052\",\n                \"email\": null,\n                \"address\": \"1200, Phnom Penh, Cambodia\",\n                \"created_at\": \"2023-06-02T10:44:46.000000Z\",\n                \"updated_at\": \"2023-06-02T10:44:46.000000Z\"\n            },\n            \"transactions\": [\n                {\n                    \"id\": 4,\n                    \"transaction_date\": \"2023-06-02\",\n                    \"transaction_amount\": 141.42,\n                    \"status\": \"Pending\",\n                    \"transaction_reference\": \"#91b32ad6\",\n                    \"created_at\": \"2023-06-02T10:44:46.000000Z\",\n                    \"updated_at\": \"2023-06-02T10:44:46.000000Z\",\n                    \"payment_method\": {\n                        \"id\": 1,\n                        \"name\": \"ABA Payway\"\n                    }\n                },\n                {\n                    \"id\": 5,\n                    \"transaction_date\": \"2023-06-02\",\n                    \"transaction_amount\": 141.42,\n                    \"status\": \"Refunded\",\n                    \"transaction_reference\": \"#22b8d906\",\n                    \"created_at\": \"2023-06-02T11:20:48.000000Z\",\n                    \"updated_at\": \"2023-06-02T11:20:48.000000Z\",\n                    \"payment_method\": {\n                        \"id\": 1,\n                        \"name\": \"ABA Payway\"\n                    }\n                }\n            ],\n            \"order_items\": [\n                {\n                    \"product_id\": 1,\n                    \"product_name\": \"Rey Morissette\",\n                    \"price\": 10.99,\n                    \"quantity\": 2\n                },\n                {\n                    \"product_id\": 2,\n                    \"product_name\": \"Althea Koch\",\n                    \"price\": 19.99,\n                    \"quantity\": 1\n                },\n                {\n                    \"product_id\": 3,\n                    \"product_name\": \"Salvador O'Kon\",\n                    \"price\": 8.9,\n                    \"quantity\": 5\n                },\n                {\n                    \"product_id\": 4,\n                    \"product_name\": \"Dr. Gonzalo Mosciski\",\n                    \"price\": 10.99,\n                    \"quantity\": 5\n                }\n            ],\n            \"order_trackings\": [\n                {\n                    \"id\": 5,\n                    \"status\": \"Pending\",\n                    \"created_at\": \"2023-06-02T10:44:46.000000Z\",\n                    \"updated_at\": \"2023-06-02T10:44:46.000000Z\"\n                },\n                {\n                    \"id\": 7,\n                    \"status\": \"Approved\",\n                    \"created_at\": \"2023-06-02T11:18:01.000000Z\",\n                    \"updated_at\": \"2023-06-02T11:18:01.000000Z\"\n                },\n                {\n                    \"id\": 8,\n                    \"status\": \"Refunded\",\n                    \"created_at\": \"2023-06-02T11:19:36.000000Z\",\n                    \"updated_at\": \"2023-06-02T11:19:36.000000Z\"\n                }\n            ]\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Create order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"customer_id\": 1,\n    \"order_date\": \"2021-10-01\",\n    \"payment_method_id\": 1,\n    \"order_notes\": \"Here is notes\",\n    \"address\": {\n        \"address_map\": \"5 b\",\n        \"address\": \"Phnom Penh, Cambodia\",\n        \"lat\": 12345,\n        \"long\": 6755\n    },\n    \"billing\": {\n        \"first_name\": \"Thorn\",\n        \"last_name\": \"Chorn\",\n        \"phone\": \"012345678\",\n        \"email\": \"demo@order.com\",\n        \"address\": \"Phnom Penh, Cambodia\"\n    },\n    \"order_info\": {\n        \"order_notes\": \"Keep on the door\",\n        \"address\": \"Phnom Penh, Cambodia\"\n    },\n    \"order_items\": [\n        {\n            \"product_id\": 1,\n            \"quantity\": 2,\n            \"price\": 10.99\n        },\n        {\n            \"product_id\": 2,\n            \"quantity\": 1,\n            \"price\": 19.99\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/orders",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Create order",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"customer_id\": 1,\n    \"order_date\": \"2021-10-01\",\n    \"payment_method_id\": 1,\n    \"order_notes\": \"Here is notes\",\n    \"address\": {\n        \"address_map\": \"5 b\",\n        \"address\": \"Phnom Penh, Cambodia\",\n        \"lat\": 12345,\n        \"long\": 6755\n    },\n    \"billing\": {\n        \"first_name\": \"Thorn\",\n        \"last_name\": \"Chorn\",\n        \"phone\": \"012345678\",\n        \"email\": \"demo@order.com\",\n        \"address\": \"Phnom Penh, Cambodia\"\n    },\n    \"order_info\": {\n        \"order_notes\": \"Keep on the door\",\n        \"address\": \"Phnom Penh, Cambodia\"\n    },\n    \"order_items\": [\n        {\n            \"product_id\": 1,\n            \"quantity\": 2,\n            \"price\": 10.99\n        },\n        {\n            \"product_id\": 2,\n            \"quantity\": 1,\n            \"price\": 19.99\n        }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/orders",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"orders"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 03 Jul 2023 03:09:42 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 03 Jul 2023 03:09:42 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.6"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"success\",\n    \"status\": 200,\n    \"data\": {\n        \"message\": \"Order created successfully\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Create Reorder",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"order_id\": 1,\n    \"order_date\": \"2021-10-01\",\n    \"payment_method_id\": 1,\n    \"order_notes\": \"Keep on the door\",\n    \"billing\": {\n        \"first_name\": \"Thorn\",\n        \"last_name\": \"Chorn\",\n        \"phone\": \"086977052\",\n        \"email\": null,\n        \"address\": \"1200, Phnom Penh, Cambodia\"\n    },\n    \"order_items\": [\n        {\n            \"product_id\": 4,\n            \"quantity\": 5,\n            \"price\": 10.99\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/orders/reorder",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orders",
+								"reorder"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get order by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/orders/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orders",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update order status",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"order_id\": 1,\n    \"status\": \"pending\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/orders/status",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orders",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update order with order tracking status",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"order_id\": 4,\n    \"status\": \"approved\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/orders/tracking/status",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orders",
+								"tracking",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refund Order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"order_id\": 4\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/orders/refund",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orders",
+								"refund"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"order_id\": 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/orders/cancel",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orders",
+								"cancel"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete order",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/orders/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orders",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Payment methods",
+			"item": [
+				{
+					"name": "Get payment methods",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/payment-methods",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"payment-methods"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "access_token",
+			"value": ""
+		},
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8000/api",
+			"type": "string"
+		},
+		{
+			"key": "user_id",
+			"value": ""
+		}
+	]
+}
